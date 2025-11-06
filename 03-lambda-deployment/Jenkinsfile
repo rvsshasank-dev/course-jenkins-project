@@ -22,17 +22,14 @@ pipeline {
             }
         }
         stage('Deploy') {
-
-            environment {
-                AWS_ACCESS_KEY_ID = credentials('aws-access-key')
-                AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+            steps{
+            withAWS(credentials: 'aws-cred', region: 'us-east-1') {
+                script{
+                            sh 'aws sts get-caller-identity'
+                            sh "sam deploy -t lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
+                }
             }
-            
-            steps {
-                sh "sam deploy -t lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
-
+      
             }
         }
-      
-    }
 }
