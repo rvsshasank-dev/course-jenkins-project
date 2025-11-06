@@ -6,7 +6,7 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh "pip3 install -r lambda-app/tests/requirements.txt"
+                sh "pip3 install -r 03-lambda-deployment/lambda-app/tests/requirements.txt"
             }
         }
         stage('Test') {
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "sam build -t lambda-app/template.yaml"
+                sh "sam build -t 03-lambda-deployment/lambda-app/template.yaml"
 
             }
         }
@@ -26,7 +26,7 @@ pipeline {
             withAWS(credentials: 'aws-cred', region: 'us-east-1') {
                 script{
                             sh 'aws sts get-caller-identity'
-                            sh "sam deploy -t lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
+                            sh "sam deploy -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
                 }
             }
       
